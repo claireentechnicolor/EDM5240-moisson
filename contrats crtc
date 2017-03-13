@@ -1,0 +1,57 @@
+#coding: utf-8
+#j'ai créé un environnement virtuel en trois étapes dans le terminal.
+
+import csv
+import requests
+from bs4 import BeautifulSoup
+
+url = "https://services.crtc.gc.ca/pub/ProactiveDisclosure/fra/contrat/trimestre?q=1&year=2016"
+
+#création d'une variable
+fich = "contrats-crtc.csv"
+
+entetes = {
+    "User-Agent":"Claire Briffault - étudiante en journalisme <3" ,
+    "From":"claire.briffault@gmail.com"
+}
+
+req = requests.get(url,headers=entetes)
+
+page = BeautifulSoup(req.text,"html.parser")
+
+#print(page)
+# Mon script semble fonctionner à ce stade mais ensuite malgré l'attention
+#portée à votre script ça ne fonctionne plus sans que je comprenne pourquoi.
+##frustraion!
+# creation d'un compteur 
+i = 0
+
+for ligne in page.find_all("tr"):
+    i == 0,
+    #print(ligne)
+    lien = ligne.a.get("href")
+        #print(lien)
+    hyperlien = "https://services.crtc.gc.ca/pub/ProactiveDisclosure/fra/contrat/" + lien
+        #print(hyperlien)
+        
+    contenu2 = requests.get(hyperlien, headers=entetes)
+    page2 = BeautifulSoup(contenu2.text, "html.parser")
+        
+    contrat = []
+        
+    contrat.append(hyperlien)
+        
+    for item in page2.find_all("tr"):
+        #print(item)
+        if item.td is not None:
+                contrat.append(item.td.text)
+                
+                print(contrat)
+                
+                achille = open(fich,"a")
+        talon = csv.writer(achille)
+        talon.writerow(contrat)
+        
+    i =+ 1
+    
+                
